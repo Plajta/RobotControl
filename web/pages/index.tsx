@@ -22,18 +22,18 @@ export default function Home() {
 			setIsConnected(false);
 		}
 
-		function onFooEvent(value: any) {
+		function onDataEvent(value: any) {
 			console.log(value);
 		}
 
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
-		socket.on("foo", onFooEvent);
+		socket.on("data", onDataEvent);
 
 		return () => {
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
-			socket.off("foo", onFooEvent);
+			socket.off("data", onDataEvent);
 		};
 	}, []);
 
