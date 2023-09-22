@@ -20,7 +20,12 @@ def robot_init():
     ep_version = ep_robot.get_version()
     print("Robot Version: {0}".format(ep_version))
 
-    time.sleep(5)
+    #time.sleep(5)
+    #ep_robot.close()
+    #exit(0)
+    return ep_robot
+
+def disconnect_robot():
     ep_robot.close()
     exit(0)
 
@@ -42,7 +47,7 @@ def send_cmd(s, cmd):
 
     # When the user enters Q or q, exit the current program.
     if msg.upper() == 'Q':
-            disconnect(s)
+            disconnect_socket(s)
 
     # Add the ending character.
     msg += ';'
@@ -58,9 +63,9 @@ def send_cmd(s, cmd):
             print("Error receiving :", e)
             sys.exit(1)
     if not len(buf):
-            disconnect(s)
+            disconnect_socket(s)
 
-def disconnect(s):
+def disconnect_socket(s):
     # Disconnect the port connection.
     s.shutdown(socket.SHUT_WR)
     s.close()
@@ -69,6 +74,7 @@ def disconnect(s):
 def camera_init():
     ep_camera = ep_robot.camera
     ep_camera.start_video_stream(display=False)
+    return ep_camera
 
 def camera_stop():
     cv2.destroyAllWindows()
@@ -79,5 +85,29 @@ def get_frame():
     return frame
 
 if __name__ == "__main__":
+    
     print("testing")
-    robot_init()
+    ep_robot = robot_init()
+    ep_camera = camera_init()
+    while True:
+        img = get_frame()
+        cv2.imshow("frame", img)
+        if ord("q") == cv2.waitKey(1):
+            camera_stop()
+            disconnect_robot()
+
+    """
+    ep_robot = robot.Robot()
+    ep_robot.initialize(conn_type="ap")
+
+    ep_camera = ep_robot.camera
+
+    # 显示200帧图传
+    ep_camera.start_video_stream(display=False)
+    for i in range(0, 200):
+        img = ep_camera.read_cv2_image()
+        cv2.imshow("Robot", img)
+        cv2.waitKey(1)
+    cv2.destroyAllWindows()
+    ep_camera.stop_video_stream()
+    """
