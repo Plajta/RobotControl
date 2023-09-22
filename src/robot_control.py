@@ -21,6 +21,8 @@ class Robot:
         self.clientSocket.connect((host, port))
 
         self.ep_robot = ep_robot
+        self.ep_chassis = self.ep_robot.chassis
+        self.ep_led = self.ep_robot.led
         self.ep_camera = None
 
     def send_cmd(self,cmd):
@@ -38,6 +40,18 @@ class Robot:
         self.clientSocket.close()
         self.ep_robot.close()
         exit(0)
+
+    def forward(self, dist, speed):
+        self.ep_chassis.move(x=dist, y=0, z=0, xy_speed=speed).wait_for_completed()
+    
+    def turn_right(self):
+        self.ep_chassis.move(x=dist, y=0, z=0, xy_speed=speed)
+
+    def turn_left():
+        pass
+
+    def backward():
+        pass
 
     #camera methods
     def camera_init(self):
