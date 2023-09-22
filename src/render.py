@@ -5,7 +5,7 @@ from flask_socketio import SocketIO
 from program import main
 from time import sleep
 
-app = Flask(__name__, static_folder="../web/webBuild/_next", template_folder="../webBuild/out")
+app = Flask(__name__, static_folder="../web/webBuild/_next", template_folder="../web/webBuild")
 socketio = SocketIO(app, cors_allowed_origins='*')
 
 @app.route("/")
