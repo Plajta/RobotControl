@@ -14,7 +14,7 @@ export function Card({ height, header, divider, children }: CardProps) {
 			withBorder
 			shadow="xs"
 			radius="lg"
-			pt={header && "xs"}
+			pt={header ? "xs" : undefined}
 			h={height || 500}
 		>
 			{header && <Center>{header}</Center>}
