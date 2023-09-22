@@ -44,7 +44,7 @@ class Robot:
     def forward(self, dist, speed):
         self.ep_chassis.move(x=dist, y=0, z=0, xy_speed=speed).wait_for_completed()
     
-    def turn_right(self):
+    def turn_right(self, dist, speed):
         self.ep_chassis.move(x=dist, y=0, z=0, xy_speed=speed)
 
     def turn_left():

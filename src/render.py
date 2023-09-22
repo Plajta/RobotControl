@@ -1,6 +1,6 @@
 import cv2
 from flask import Flask, Response, render_template
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 from program import main
 from time import sleep
@@ -20,7 +20,8 @@ def video():
 def ping_in_intervals():
     while True:
         sleep(1)
-        emit("data", "request?")        
+        socketio.emit("data", "request?")
+        print("sent request")
 
 if __name__ == "__main__":
     socketio.start_background_task(ping_in_intervals)
