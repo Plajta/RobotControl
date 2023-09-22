@@ -17,4 +17,6 @@ def detect(frame, detector):
     if ids is not None:
         cv2.aruco.drawDetectedMarkers(frame, corners, ids)
 
-    return corners, ids, frame
+    n_objects = len(ids)
+
+    return n_objects, ids, frame

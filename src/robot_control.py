@@ -50,7 +50,6 @@ if __name__ == "__main__":
     robot.camera_init()
     while True:
         img = robot.get_frame()
-        #print(robot.get_sensor())
         cv2.imshow("frame", img)
         if ord("q") == cv2.waitKey(1):
             robot.camera_stop()

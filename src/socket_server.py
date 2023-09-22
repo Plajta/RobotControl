@@ -3,7 +3,7 @@ import socket
 # SERVER_HOST = '0.0.0.0'
 # SERVER_PORT = 9090
 
-class server:
+class Server:
     def __init__(self,port,address='0.0.0.0'):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((address, port))
