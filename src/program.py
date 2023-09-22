@@ -4,6 +4,9 @@ from vision import aruco_init, detect
 import socket_server
 import asyncio
 
+from comm import data_comm
+
+
 import cv2
 
 def main():
@@ -57,6 +60,9 @@ def main():
 
         n_objects_glob = n_objects
 
+        #put data into queue
+        data_comm.put_data(n_objects)
+
         ret, buffer = cv2.imencode('.jpg', img_detect)
         frame = buffer.tobytes()
         yield (b'--frame\r\n'
@@ -65,7 +71,6 @@ def main():
         if ord("q") == cv2.waitKey(1):
             robot.camera_stop()
             robot.disconnect_robot()
-
 
 if __name__ == "__main__":
     main()
