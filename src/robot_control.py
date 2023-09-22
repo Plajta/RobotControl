@@ -27,7 +27,7 @@ class Robot:
         self.clientSocket.send(cmd.encode('utf-8'))
         try:
             buf = s.recv(1024)
-            print(buf.decode('utf-8'))
+            return buf.decode('utf-8')
         except socket.error as e:
             print("Error receiving: ", e)
             sys.exit(1)
