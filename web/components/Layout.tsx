@@ -1,11 +1,16 @@
 import React from "react";
-import { Box, Paper, Stack } from "@mantine/core";
+import { Box, Group, Paper, Stack, Text } from "@mantine/core";
+import { ThemeSwitcher } from "~/components/ThemeSwitcher";
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<Stack h="100%">
-			<Paper shadow="xs" p="sm">
-				Header
+			<Paper shadow="xs" p="sm" withBorder radius={0}>
+				<Group justify="space-between">
+					<Text>Header</Text>
+
+					<ThemeSwitcher />
+				</Group>
 			</Paper>
 
 			<Box h="100%" px="sm">

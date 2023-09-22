@@ -1,12 +1,32 @@
-from flask import Flask, render_template
+import cv2
+from flask import Flask, Response, render_template
+from robot_control import Robot
 
-# Initializing flask app
 app = Flask(__name__, static_folder="../web/out/_next", template_folder="../web/out")
 
-# Route for seeing a data
-@app.route('/')
+
+def gen_frames():
+    robot = Robot()
+    robot.camera_init()
+
+    while True:
+        frame = robot.get_frame()
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+@app.route("/")
 def hello_world():
     return render_template("index.html")
 
-app.debug=True
-app.run(host='0.0.0.0', port=6969)
+
+@app.route("/video")
+def video():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+app.debug = True
+app.run(host="0.0.0.0", port=6969)
