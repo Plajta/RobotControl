@@ -1,3 +1,11 @@
+import { Stack } from "@mantine/core";
+
 export default function Home() {
-	return <p>vyhrajeme</p>;
+	return (
+		<Stack>
+			<p>Plajta</p>
+
+			<p>Vyhraje</p>
+		</Stack>
+	);
 }
