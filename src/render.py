@@ -3,7 +3,7 @@ from flask import Flask, Response, render_template
 
 from program import main
 
-app = Flask(__name__, static_folder="../web/out/_next", template_folder="../web/out")
+app = Flask(__name__, static_folder="../web/webBuild/_next", template_folder="../webBuild/out")
 
 
 @app.route("/")
