@@ -17,11 +17,25 @@ class Robot:
         ep_version = ep_robot.get_version()
         print("Robot Version: {0}".format(ep_version))
 
+        self.clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.clientSocket.connect((host, port))
+
         self.ep_robot = ep_robot
         self.ep_camera = None
 
+    def send_cmd(self,cmd):
+        self.clientSocket.send(cmd.encode('utf-8'))
+        try:
+            buf = s.recv(1024)
+            print(buf.decode('utf-8'))
+        except socket.error as e:
+            print("Error receiving: ", e)
+            sys.exit(1)
+    
     #robot methods
     def disconnect_robot(self):
+        self.clientSocket.shutdown(socket.SHUT_WR)
+        self.clientSocket.close()
         self.ep_robot.close()
         exit(0)
 
