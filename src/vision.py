@@ -13,7 +13,7 @@ def detect(frame, detector):
     corners, ids, rejected = detector.detectMarkers(gray)
 
     # Draw detected markers on the frame
-    print(corners)
+    print(ids)
     if ids is not None:
         cv2.aruco.drawDetectedMarkers(frame, corners, ids)
 
