@@ -25,7 +25,7 @@ class Robot:
         self.ep_led = self.ep_robot.led
         self.ep_camera = None
 
-    def send_cmd(self,cmd):
+    async def send_cmd(self,cmd):
         self.clientSocket.send(cmd.encode('utf-8'))
         try:
             buf = self.clientSocket.recv(1024)
