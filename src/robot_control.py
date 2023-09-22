@@ -1,4 +1,5 @@
-from robomaster import robot
+from robomaster import robot, camera
+import cv2
 
 import socket
 import sys
@@ -7,6 +8,10 @@ import time
 # In direct connection mode, the default IP address of the robot is 192.168.2.1 and the control command port is port 40923.
 host = "192.168.2.1"
 port = 40923
+
+#robot object
+ep_robot = None
+ep_camera = None
 
 def robot_init():
     ep_robot = robot.Robot()
@@ -59,6 +64,19 @@ def disconnect(s):
     # Disconnect the port connection.
     s.shutdown(socket.SHUT_WR)
     s.close()
+
+#camera settings
+def camera_init():
+    ep_camera = ep_robot.camera
+    ep_camera.start_video_stream(display=False)
+
+def camera_stop():
+    cv2.destroyAllWindows()
+    ep_camera.stop_video_stream()
+
+def get_frame():
+    frame = ep_camera.read_cv2_image()
+    return frame
 
 if __name__ == "__main__":
     print("testing")
