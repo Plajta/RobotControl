@@ -37,6 +37,11 @@ class Robot:
     def get_frame(self):
         frame = self.ep_camera.read_cv2_image()
         return frame
+    
+    #sensors
+    def get_sensor(self):
+        infrared_data = self.ep_robot.gyro.read()
+        return infrared_data
 
 if __name__ == "__main__":
     
@@ -45,6 +50,7 @@ if __name__ == "__main__":
     robot.camera_init()
     while True:
         img = robot.get_frame()
+        #print(robot.get_sensor())
         cv2.imshow("frame", img)
         if ord("q") == cv2.waitKey(1):
             robot.camera_stop()
