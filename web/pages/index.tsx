@@ -27,7 +27,7 @@ export default function Home() {
 						<img
 							src={getCameraFeed()}
 							alt="camera feed"
-							width="100%"
+							width="50%"
 						/>
 					</Card>
 				</Grid.Col>
