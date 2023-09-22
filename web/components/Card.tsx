@@ -14,7 +14,7 @@ export interface CardProps {
 
 export function Card({ height, header, divider, children }: CardProps) {
 	return (
-		<Paper shadow="xs" radius="lg" p="xl" h={height || 500}>
+		<Paper withBorder shadow="xs" radius="lg" p="xl" h={height || 500}>
 			{header && (
 				<Grid mb={divider ? 0 : 20}>
 					{header.leftSection && (
