@@ -22,8 +22,9 @@ def main():
         img = robot.get_frame()
         n_objects, ids, img_detect = detect(img, detector)
 
-        if n_objects:
-            print(robot.send_cmd("led control comp all r 255 g 0 b 0 effect blink"))
+        # if n_objects:
+        #     print("sus")
+        #     print(asyncio.run(robot.send_cmd("led control comp all r 255 g 0 b 0 effect blink")))
 
         if n_objects < n_objects_glob:
             #validate buffer
