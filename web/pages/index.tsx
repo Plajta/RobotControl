@@ -18,6 +18,12 @@ export default function Home() {
 			: "http://localhost:6969/video";
 	}
 
+	function getMapFeed() {
+		return process.env.NODE_ENV === "development"
+			? "https://www.chmi.cz/files/portal/docs/meteo/kam/plzen.jpg"
+			: "http://localhost:6969/map";
+	}
+
 	useEffect(() => {
 		function onConnect() {
 			setIsConnected(true);
@@ -106,7 +112,11 @@ export default function Home() {
 							</Tabs.Panel>
 
 							<Tabs.Panel value="map">
-								Messages tab content
+								<img
+									src={getMapFeed()}
+									alt="camera feed"
+									width="100%"
+								/>
 							</Tabs.Panel>
 
 							<Tabs.Panel value="charts">
