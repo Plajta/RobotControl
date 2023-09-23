@@ -53,8 +53,7 @@ export default function Home() {
 		}
 
 		function onDataEvent(value: any) {
-			console.log(value);
-			setCurrentData(JSON.parse(value));
+			setCurrentData(value);
 		}
 
 		socket.on("connect", onConnect);
