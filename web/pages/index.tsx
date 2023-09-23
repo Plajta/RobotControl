@@ -82,7 +82,7 @@ export default function Home() {
 					<Card
 						divider
 						px="xs"
-						height="88vh"
+						height={980}
 						header={<Text fw="bold">Info</Text>}
 					>
 						{currentData && (
@@ -127,7 +127,7 @@ export default function Home() {
 				</Grid.Col>
 
 				<Grid.Col span={8}>
-					<Card height="88vh">
+					<Card height={980}>
 						<Tabs defaultValue="camera" classNames={classes}>
 							<Tabs.List>
 								<Tabs.Tab
@@ -194,7 +194,7 @@ export default function Home() {
 					<Card
 						divider
 						px="xs"
-						height="88vh"
+						height={980}
 						header={<Text fw="bold">Feed</Text>}
 					>
 						3
