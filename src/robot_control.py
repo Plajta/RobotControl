@@ -9,6 +9,7 @@ import asyncio
 # In direct connection mode, the default IP address of the robot is 192.168.2.1 and the control command port is port 40923.
 host = "192.168.2.1"
 port = 40923
+commands = []
 
 class Robot:
     def __init__(self):
@@ -55,6 +56,7 @@ class Robot:
     def strafe_right(self,period=2):
         self.ep_chassis.drive_wheels(100,100,-100,-100,period)
         time.sleep(2)
+
     def strafe_left(self,period=2):
         self.ep_chassis.drive_wheels(-100,-100,100,100,period)
         time.sleep(2)
@@ -62,12 +64,13 @@ class Robot:
     def turn_right(self,period=2):
         self.ep_chassis.drive_wheels(100,-100,-100,100,period)
         time.sleep(period)
+
     def turn_left(self,period=2):
         self.ep_chassis.drive_wheels(-100,100,100,-100,period)
         time.sleep(period)
 
     def backward():
-        pass
+        pass #TODO
 
     def __battery_updater(self, bat_level): #another callback function
         self.battery_level = bat_level
@@ -143,9 +146,6 @@ if __name__ == "__main__":
     robot = Robot()
     robot.camera_init()
     asyncio.run(robot.follow_wall(800,1,True))
-    # robot.forward2()
-    # robot.turn_left()
-    # robot.turn_right()
     while True:
         img = robot.get_frame()
         cv2.imshow("frame", img)
