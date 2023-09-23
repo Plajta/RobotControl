@@ -7,7 +7,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 		<Stack h="100%">
 			<Paper shadow="xs" p="sm" withBorder radius={0}>
 				<Group justify="space-between">
-					<Text>Header</Text>
+					<Text>Plajta catering robot</Text>
 
 					<ThemeSwitcher />
 				</Group>
