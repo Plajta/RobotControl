@@ -4,6 +4,7 @@ import cv2
 import socket
 import sys
 import time
+import asyncio
 
 # In direct connection mode, the default IP address of the robot is 192.168.2.1 and the control command port is port 40923.
 host = "192.168.2.1"
@@ -44,17 +45,40 @@ class Robot:
     def forward(self, dist, speed):
         self.ep_chassis.move(x=dist, y=0, z=0, xy_speed=speed).wait_for_completed()
     
-    def turn_right(self, dist, speed):
-        self.ep_chassis.move(x=dist, y=0, z=0, xy_speed=speed)
+    def forward2(self):
+        self.ep_chassis.drive_wheels(100,100,100,100,1)
 
-    def turn_left():
-        pass
+    def strafe_right(self):
+        self.ep_chassis.drive_wheels(100,100,-100,-100,2)
+        time.sleep(2)
+    def strafe_left(self):
+        self.ep_chassis.drive_wheels(-100,-100,100,100,2)
+        time.sleep(2)
+
+    def turn_right(self):
+        self.ep_chassis.drive_wheels(100,-100,-100,100,2)
+        time.sleep(2)
+    def turn_left(self):
+        self.ep_chassis.drive_wheels(-100,100,100,-100,2)
+        time.sleep(2)
 
     def backward():
         pass
 
     def get_battery(self):
         return self.ep_robot.battery.get_battery_percentage()
+
+    def process_callback(self,data):
+        print(data)
+        self.koeficient = ((data[0]-self.distance)//20)*10
+
+    def follow_wall(self,distance=1000):
+        self.distance = distance
+        self.koeficient = 0
+        self.ep_robot.sensor.sub_distance(freq=5, callback=self.process_callback)
+        while True:
+            print(self.koeficient)
+            self.ep_chassis.drive_wheels(100,100,100-self.koeficient,100-self.koeficient,0)
 
     #camera methods
     def camera_init(self):
@@ -79,6 +103,10 @@ if __name__ == "__main__":
     print("testing")
     robot = Robot()
     robot.camera_init()
+    robot.follow_wall()
+    # robot.forward2()
+    # robot.turn_left()
+    # robot.turn_right()
     while True:
         img = robot.get_frame()
         cv2.imshow("frame", img)
