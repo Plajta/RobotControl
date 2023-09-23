@@ -22,7 +22,9 @@ export function Card({ height, header, divider, px, children }: CardProps) {
 
 			{divider && <Divider />}
 
-			<Box px={px}>{children}</Box>
+			<Box px={px} h="100%">
+				{children}
+			</Box>
 		</Paper>
 	);
 }
