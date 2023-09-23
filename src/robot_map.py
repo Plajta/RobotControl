@@ -3,7 +3,7 @@ import numpy as np
 
 class RobotMap:
     def __init__(self):
-        self.map = np.zeros((640, 480, 3), dtype=np.uint8)
+        self.map = np.full((640, 480), 255, dtype=np.uint8)
         self.instruction_data = []
 
     def draw_interest_point(self, X, Y):
@@ -16,4 +16,5 @@ class RobotMap:
         return self.map
 
     def upload_commands(self, commands):
-        print(commands)
+        #print(commands)
+        pass
