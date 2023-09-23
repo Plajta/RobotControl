@@ -8,84 +8,89 @@ import cv2
 import time
 import asyncio
 
-def main(run_bool, sock_instance):
-    #variables
-    n_objects_glob = 0
-    start_objects_glob = 0
-    start_time = int(time.time())
-    buf = []
-    i = 0
+class main_program:
+    def __init__(self):
+        self.run = False
 
-    print("testing")
-    robot = Robot()
+    def main(self, sock_instance):
+        #variables
+        n_objects_glob = 0
+        start_objects_glob = 0
+        start_time = int(time.time())
+        buf = []
+        i = 0
 
-    robot.camera_init()
-    robot.wall_init(1,800)
-    detector = aruco_init()
+        print("testing")
+        robot = Robot()
 
-    while run_bool:
-        robot.follow_wall()
-        img = robot.get_frame()
-        n_objects, ids, img_detect = detect(img, detector)
+        robot.camera_init()
+        robot.wall_init(2,800)
+        detector = aruco_init()
 
-        if i == 0: #run only once
-            start_objects_glob = n_objects
-            i += 1
+        while True:
+            img = robot.get_frame()
+            n_objects, ids, img_detect = detect(img, detector)
 
-        # if n_objects:
-        #     print("sus")
-        #     print(asyncio.run(robot.send_cmd("led control comp all r 255 g 0 b 0 effect blink")))
+            if i == 0: #run only once
+                start_objects_glob = n_objects
+                i += 1
 
-        if n_objects < n_objects_glob:
-            #validate buffer
-            if -1 in buf and 1 not in buf:    
-                print("redbull gambit!")
-                sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
+            # if n_objects:
+            #     print("sus")
+            #     print(asyncio.run(robot.send_cmd("led control comp all r 255 g 0 b 0 effect blink")))
+
+            if n_objects < n_objects_glob:
+                #validate buffer
+                if -1 in buf and 1 not in buf:    
+                    print("redbull gambit!")
+                    sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
+                    #buf = []
+                
+                buf.append(-1)
+                #sock_server.set_data("object_lost")
+            elif n_objects > n_objects_glob:
+                #validate buffer
+
+                buf.append(1)
+            else:
+                #sock_server.set_data(str(n_objects))
+                if len(buf) >= 10:
+                    buf = []
+                buf.append(0)
+
+            if 1 in buf and -1 not in buf:
+                print("někdo přidal redbulla?")
+                sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
+                buf.pop(buf.index(1))
                 #buf = []
-            
-            buf.append(-1)
-            #sock_server.set_data("object_lost")
-        elif n_objects > n_objects_glob:
-            #validate buffer
 
-            buf.append(1)
-        else:
-            #sock_server.set_data(str(n_objects))
-            if len(buf) >= 10:
-                buf = []
-            buf.append(0)
+            if -1 in buf and 1 not in buf:    
 
-        if 1 in buf and -1 not in buf:
-            print("někdo přidal redbulla?")
-            sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
-            buf.pop(buf.index(1))
-            #buf = []
+                print("redbull gambit!")
+                buf.pop(buf.index(-1))
+                #buf = []
 
-        if -1 in buf and 1 not in buf:    
+            n_objects_glob = n_objects
+            battery_status = robot.battery_level
 
-            print("redbull gambit!")
-            buf.pop(buf.index(-1))
-            #buf = []
+            #put data into queue
+            data_comm.put_data(n_objects, start_time, start_objects_glob, battery_status)
+            if self.run:
+                robot.follow_wall() #wall following
 
-        n_objects_glob = n_objects
-        battery_status = robot.battery_level
+            ret, buffer = cv2.imencode('.jpg', img_detect)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-        #put data into queue
-        data_comm.put_data(n_objects, start_time, start_objects_glob, battery_status)
-
-        ret, buffer = cv2.imencode('.jpg', img_detect)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-def main_map(run_bool):
-    robotmap = RobotMap()
-    while run_bool:
-        robotmap.draw_interest_point(320, 320)
-        robotmap.upload_commands(commands)
-        frame = robotmap.get_map()
-        yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    def main_map(self):
+        robotmap = RobotMap()
+        while True:
+            robotmap.draw_interest_point(320, 320)
+            robotmap.upload_commands(commands)
+            frame = robotmap.get_map()
+            yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 if __name__ == "__main__":
