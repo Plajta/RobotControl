@@ -20,9 +20,11 @@ def main(run_bool, sock_instance):
     robot = Robot()
 
     robot.camera_init()
+    robot.wall_init(1,800)
     detector = aruco_init()
 
     while run_bool:
+        robot.follow_wall()
         img = robot.get_frame()
         n_objects, ids, img_detect = detect(img, detector)
 

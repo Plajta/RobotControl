@@ -104,7 +104,7 @@ class Robot:
         self.koeficient = P + D
         self.last_e = e
 
-    async def follow_wall(self,distance=1000,desired_doors=1,speed=100):
+    def wall_init(self,desired_doors=1,distance=1000):
         self.distance = distance
         self.desired_doors = desired_doors
         self.dverecounter = 0
@@ -112,19 +112,20 @@ class Robot:
         self.last_e = 0
         self.lock = False
         self.ep_robot.sensor.sub_distance(freq=5, callback=self.process_callback_PD)
-        while True:
-            # print(self.koeficient)
-            if not self.lock:
-                self.ep_chassis.drive_wheels(speed,speed,speed-self.koeficient,speed-self.koeficient,0)
-                commands.append([speed,speed,speed-self.koeficient,speed-self.koeficient])
-            else:
-                time.sleep(0.5)
-                self.strafe_right(4)
-                print("zajel")
-                self.ep_robot.sensor.unsub_distance()
-                coolDoneLoop(self.ep_led,led)
-                Setledus(self.ep_led,led, "W")
-                break
+        
+
+    def follow_wall(self,speed=100):
+        # print(self.koeficient)
+        if not self.lock:
+            self.ep_chassis.drive_wheels(speed,speed,speed-self.koeficient,speed-self.koeficient,0)
+            commands.append([speed,speed,speed-self.koeficient,speed-self.koeficient])
+        else:
+            time.sleep(0.5)
+            self.strafe_right(4)
+            print("zajel")
+            self.ep_robot.sensor.unsub_distance()
+            coolDoneLoop(self.ep_led,led)
+            Setledus(self.ep_led,led, "W")
 
     #camera methods
     def camera_init(self):
