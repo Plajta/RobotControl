@@ -145,8 +145,8 @@ if __name__ == "__main__":
     print("testing")
     robot = Robot()
     robot.camera_init()
-    asyncio.run(robot.follow_wall(800,1,100))
-
+    asyncio.run(robot.follow_wall(800,1,100)) # Vpravo
+    # asyncio.run(robot.follow_wall(600,1,-100)) # Vlevo
     while True:
         img = robot.get_frame()
         cv2.imshow("frame", img)
