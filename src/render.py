@@ -3,7 +3,7 @@ from flask import Flask, Response, render_template
 from flask_socketio import SocketIO
 from comm import data_comm
 
-from program import main
+from program import main, main_map
 from time import sleep
 
 app = Flask(__name__, static_folder="../web/webBuild/_next", template_folder="../web/webBuild")
@@ -16,6 +16,10 @@ def hello_world():
 @app.route("/video")
 def video():
     return Response(main(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route("/map")
+def video_map():
+    return Response(main_map(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def send_data():
     while True:

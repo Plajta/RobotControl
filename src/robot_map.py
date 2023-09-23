@@ -11,3 +11,6 @@ class RobotMap:
 
     def draw_point(self, X, Y):
         cv2.circle(self.map, (X, Y), radius=0, color=(255, 0, 0), thickness=-1)
+
+    def get_map(self):
+        return self.map

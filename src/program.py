@@ -1,4 +1,5 @@
 from robot_control import Robot
+from robot_map import RobotMap
 from vision import aruco_init, detect
 
 import socket_server
@@ -19,6 +20,7 @@ def main():
 
     print("testing")
     robot = Robot()
+
     sock_server = socket_server.Server(9090)
     robot.camera_init()
     detector = aruco_init()
@@ -75,9 +77,16 @@ def main():
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-        if ord("q") == cv2.waitKey(1):
-            robot.camera_stop()
-            robot.disconnect_robot()
+def main_map():
+    while True:
+        robotmap = RobotMap()
+        robotmap.draw_interest_point(320, 320)
+
+        frame = robotmap.get_map()
+
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
 
 if __name__ == "__main__":
     main()
