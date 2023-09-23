@@ -117,7 +117,7 @@ class Robot:
                 commands.append([speed,speed,speed-self.koeficient,speed-self.koeficient])
             else:
                 time.sleep(0.5)
-                robot.strafe_right(4)
+                self.strafe_right(4)
                 print("zajel")
                 self.ep_robot.sensor.unsub_distance()
                 break

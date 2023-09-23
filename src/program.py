@@ -6,6 +6,7 @@ from comm import data_comm
 
 import cv2
 import time
+import asyncio
 
 def main(run_bool, sock_instance):
     #variables
@@ -21,7 +22,6 @@ def main(run_bool, sock_instance):
     robot.camera_init()
     detector = aruco_init()
 
-    #asyncio.run(sock_server.loop()) #run socket server asynfhafasly
     while run_bool:
         img = robot.get_frame()
         n_objects, ids, img_detect = detect(img, detector)
