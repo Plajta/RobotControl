@@ -25,6 +25,9 @@ class Robot:
         self.ep_chassis = self.ep_robot.chassis
         self.ep_led = self.ep_robot.led
         self.ep_camera = None
+        self.battery_level = 0.0
+
+        self.get_battery_start()
 
     async def send_cmd(self,cmd):
         self.clientSocket.send(cmd.encode('utf-8'))
@@ -39,6 +42,7 @@ class Robot:
     def disconnect_robot(self):
         self.clientSocket.shutdown(socket.SHUT_WR)
         self.clientSocket.close()
+        self.get_battery_stop()
         self.ep_robot.close()
         exit(0)
 
@@ -65,8 +69,14 @@ class Robot:
     def backward():
         pass
 
-    def get_battery(self):
-        return self.ep_robot.battery.get_battery_percentage()
+    def __battery_updater(self, bat_level): #another callback function
+        self.battery_level = bat_level
+
+    def get_battery_start(self):
+        self.ep_robot.sub_battery_info(freq=5, callback=self.__battery_updater)
+
+    def get_battery_stop(self):
+        self.ep_robot.unsub_battery_info()
 
     def process_callback(self,data):
         print(data)

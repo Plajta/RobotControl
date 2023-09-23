@@ -10,7 +10,7 @@ from comm import data_comm
 import cv2
 import time
 
-def main():
+def main(run_bool):
     #variables
     n_objects_glob = 0
     start_objects_glob = 0
@@ -26,7 +26,7 @@ def main():
     detector = aruco_init()
 
     #asyncio.run(sock_server.loop()) #run socket server asynfhafasly
-    while run:
+    while run_bool:
         img = robot.get_frame()
         n_objects, ids, img_detect = detect(img, detector)
 
@@ -67,7 +67,7 @@ def main():
             #buf = []
 
         n_objects_glob = n_objects
-        battery_status = robot.get_battery()
+        battery_status = robot.battery_level
 
         #put data into queue
         data_comm.put_data(n_objects, start_time, start_objects_glob, battery_status)
@@ -77,8 +77,8 @@ def main():
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-def main_map():
-    while run:
+def main_map(run_bool):
+    while run_bool:
         robotmap = RobotMap()
         robotmap.draw_interest_point(320, 320)
 
@@ -87,9 +87,6 @@ def main_map():
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-
-global run
-run = False
 
 if __name__ == "__main__":
     main()
