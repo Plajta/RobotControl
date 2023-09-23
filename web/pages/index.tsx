@@ -92,6 +92,7 @@ export default function Home() {
 		}
 
 		function onMessageEvent(value: string) {
+			console.log(value);
 			setFeedMessages((prev) => [...prev, value]);
 		}
 
