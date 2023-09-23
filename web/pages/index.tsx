@@ -1,5 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
-import { Grid, Text, Tabs, rem, Stack, Group } from "@mantine/core";
+import { useState, useEffect } from "react";
+import {
+	Grid,
+	Text,
+	Tabs,
+	Stack,
+	Group,
+	Paper,
+	Button,
+	rem,
+	NumberInput,
+} from "@mantine/core";
 import { IconCamera, IconChartLine, IconWorld } from "@tabler/icons-react";
 import { socket } from "~/modules/socket";
 import { Card } from "~/components/Card";
@@ -18,6 +28,7 @@ interface Data {
 export default function Home() {
 	const [isConnected, setIsConnected] = useState(socket.connected);
 	const [date, setDate] = useState(new Date());
+	const [dest, setDest] = useState(1);
 	const [currentData, setCurrentData] = useState<Data | null>(
 		process.env.NODE_ENV === "development"
 			? {
@@ -28,6 +39,12 @@ export default function Home() {
 			  }
 			: null,
 	);
+	const [feedMessages, setFeedMessages] = useState([
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+	]);
 
 	const iconStyle = { width: rem(12), height: rem(12) };
 
@@ -41,6 +58,15 @@ export default function Home() {
 		return process.env.NODE_ENV === "development"
 			? "https://www.chmi.cz/files/portal/docs/meteo/kam/plzen.jpg"
 			: "http://localhost:6969/map";
+	}
+
+	async function sendCommand(value: string) {
+		const resp = await fetch("http://localhost:6969/command", {
+			method: "POST",
+			body: JSON.stringify({ command: value, dest }),
+		});
+
+		console.log(resp.status);
 	}
 
 	useEffect(() => {
@@ -197,7 +223,45 @@ export default function Home() {
 						height={980}
 						header={<Text fw="bold">Feed</Text>}
 					>
-						3
+						<Stack h={920} justify="space-between" mt="xs">
+							<Stack>
+								{feedMessages.map((message) => (
+									<Paper
+										p="sm"
+										radius="md"
+										style={(sx) => ({
+											background: sx.colors.blue[7],
+											color: "white",
+										})}
+									>
+										{message.content}
+									</Paper>
+								))}
+							</Stack>
+
+							<Group grow gap={5}>
+								<Button
+									variant="filled"
+									color="green.8"
+									onClick={() => sendCommand("start")}
+								>
+									Start
+								</Button>
+
+								<Button
+									variant="filled"
+									color="red.8"
+									onClick={() => sendCommand("stop")}
+								>
+									Stop
+								</Button>
+
+								<NumberInput
+									value={dest}
+									onChange={(e) => setDest(+e)}
+								/>
+							</Group>
+						</Stack>
 					</Card>
 				</Grid.Col>
 			</Grid>
