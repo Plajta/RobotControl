@@ -78,8 +78,7 @@ export default function Home() {
 			setIsConnected(false);
 		}
 
-		function onDataEvent(value: any) {
-			console.log(value);
+		function onDataEvent(value: Data) {
 			setCurrentData(value);
 		}
 
