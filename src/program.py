@@ -1,7 +1,7 @@
 from robot_control import Robot, commands
 from robot_map import RobotMap
 from vision import aruco_init, detect
-
+from ledik import *
 from comm import data_comm
 
 import cv2
@@ -22,7 +22,7 @@ class main_program:
 
         print("testing")
         robot = Robot()
-
+        ep_led = robot.led
         robot.camera_init()
         robot.wall_init(1,600)
         detector = aruco_init()
@@ -56,12 +56,14 @@ class main_program:
             if 1 in buf and -1 not in buf:
                 print("někdo přidal redbulla?")
                 sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
+                Setledus(ep_led,led, "G")
                 buf.pop(buf.index(1))
                 #buf = []
 
             if -1 in buf and 1 not in buf:    
                 print("redbull gambit!")
                 sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
+                Setledus(ep_led,led, "R")
                 buf.pop(buf.index(-1))
                 #buf = []
 
