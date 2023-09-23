@@ -73,7 +73,7 @@ class Robot:
         self.battery_level = bat_level
 
     def get_battery_start(self):
-        self.ep_robot.sub_battery_info(freq=5, callback=self.__battery_updater)
+        self.ep_robot.battery.sub_battery_info(freq=5, callback=self.__battery_updater)
 
     def get_battery_stop(self):
         self.ep_robot.unsub_battery_info()

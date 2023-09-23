@@ -32,6 +32,7 @@ def main(run_bool):
 
         if i == 0: #run only once
             start_objects_glob = n_objects
+            i += 1
 
         # if n_objects:
         #     print("sus")
