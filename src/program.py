@@ -2,15 +2,12 @@ from robot_control import Robot
 from robot_map import RobotMap
 from vision import aruco_init, detect
 
-import socket_server
-import asyncio
-
 from comm import data_comm
 
 import cv2
 import time
 
-def main(run_bool):
+def main(run_bool, sock_instance):
     #variables
     n_objects_glob = 0
     start_objects_glob = 0
@@ -21,7 +18,6 @@ def main(run_bool):
     print("testing")
     robot = Robot()
 
-    sock_server = socket_server.Server(9090)
     robot.camera_init()
     detector = aruco_init()
 
@@ -42,6 +38,7 @@ def main(run_bool):
             #validate buffer
             if -1 in buf and 1 not in buf:    
                 print("redbull gambit!")
+                sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
                 #buf = []
             
             buf.append(-1)
@@ -58,6 +55,7 @@ def main(run_bool):
 
         if 1 in buf and -1 not in buf:
             print("někdo přidal redbulla?")
+            sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
             buf.pop(buf.index(1))
             #buf = []
 

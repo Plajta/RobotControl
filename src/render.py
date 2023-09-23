@@ -18,7 +18,7 @@ def hello_world():
 
 @app.route("/video")
 def video():
-    return Response(main(run), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(main(run, socketio), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/map")
 def video_map():
