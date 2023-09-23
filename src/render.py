@@ -6,8 +6,6 @@ from comm import data_comm
 from program import main_program
 from time import sleep
 
-import asyncio
-
 #variables
 run = False
 
