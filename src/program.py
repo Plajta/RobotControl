@@ -77,8 +77,8 @@ def main(run_bool, sock_instance):
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 def main_map(run_bool):
+    robotmap = RobotMap()
     while run_bool:
-        robotmap = RobotMap()
         robotmap.draw_interest_point(320, 320)
 
         frame = robotmap.get_map()
