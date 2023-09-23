@@ -123,9 +123,9 @@ class Robot:
             time.sleep(0.5)
             self.strafe_right(4)
             print("zajel")
-            #self.ep_robot.sensor.unsub_distance()
-            #coolDoneLoop(self.ep_led,led)
-            #Setledus(self.ep_led,led, "W")
+            self.ep_robot.sensor.unsub_distance()
+            coolDoneLoop(self.ep_led,led)
+            Setledus(self.ep_led,led, "W")
 
     #camera methods
     def camera_init(self):

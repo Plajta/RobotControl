@@ -24,7 +24,7 @@ class main_program:
         robot = Robot()
 
         robot.camera_init()
-        robot.wall_init(2,800)
+        robot.wall_init(1,600)
         detector = aruco_init()
 
         while True:
@@ -41,11 +41,6 @@ class main_program:
 
             if n_objects < n_objects_glob:
                 #validate buffer
-                if -1 in buf and 1 not in buf:    
-                    print("redbull gambit!")
-                    sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
-                    #buf = []
-                
                 buf.append(-1)
                 #sock_server.set_data("object_lost")
             elif n_objects > n_objects_glob:
@@ -54,7 +49,7 @@ class main_program:
                 buf.append(1)
             else:
                 #sock_server.set_data(str(n_objects))
-                if len(buf) >= 10:
+                if len(buf) >= 20:
                     buf = []
                 buf.append(0)
 
@@ -65,8 +60,8 @@ class main_program:
                 #buf = []
 
             if -1 in buf and 1 not in buf:    
-
                 print("redbull gambit!")
+                sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
                 buf.pop(buf.index(-1))
                 #buf = []
 
@@ -76,7 +71,9 @@ class main_program:
             #put data into queue
             data_comm.put_data(n_objects, start_time, start_objects_glob, battery_status)
             if self.run:
-                robot.follow_wall() #wall following
+                robot.follow_wall(-100) #wall following
+                #transform commands into map
+                
 
             ret, buffer = cv2.imencode('.jpg', img_detect)
             frame = buffer.tobytes()
@@ -89,9 +86,11 @@ class main_program:
             robotmap.draw_interest_point(320, 320)
             robotmap.upload_commands(commands)
             frame = robotmap.get_map()
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
             yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()
