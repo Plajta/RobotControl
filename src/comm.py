@@ -11,6 +11,8 @@ class DataComm:
         data_dict["start_objects"] = start_objects
         data_dict["battery"] = battery
 
+        print(data_dict)
+
         self.data_queue.put(data_dict)
 
     def get_data(self):
