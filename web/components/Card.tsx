@@ -1,27 +1,28 @@
 import React from "react";
-import { Box, Center, Divider, Grid, Paper } from "@mantine/core";
+import {
+	Box,
+	Center,
+	Divider,
+	Paper,
+	type MantineSpacing,
+} from "@mantine/core";
 
 export interface CardProps {
 	height?: number | string;
 	header?: React.ReactNode;
 	divider?: boolean;
+	px?: MantineSpacing;
 	children: React.ReactNode;
 }
 
-export function Card({ height, header, divider, children }: CardProps) {
+export function Card({ height, header, divider, px, children }: CardProps) {
 	return (
-		<Paper
-			withBorder
-			shadow="xs"
-			radius="lg"
-			pt={header ? "xs" : undefined}
-			h={height || 500}
-		>
-			{header && <Center>{header}</Center>}
+		<Paper withBorder shadow="xs" radius="sm" h={height || 500}>
+			{header && <Center py={5}>{header}</Center>}
 
-			{divider && <Divider mb={10} />}
+			{divider && <Divider />}
 
-			<Box px="md">{children}</Box>
+			<Box px={px}>{children}</Box>
 		</Paper>
 	);
 }
