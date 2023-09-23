@@ -29,49 +29,48 @@ class main_program:
 
         while True:
             img = robot.get_frame()
-            n_objects, ids, img_detect = detect(img, detector)
+            self.n_objects, ids, img_detect = detect(img, detector)
 
             if i == 0: #run only once
-                start_objects_glob = n_objects
+                start_objects_glob = self.n_objects
                 i += 1
 
             # if n_objects:
             #     print("sus")
             #     print(asyncio.run(robot.send_cmd("led control comp all r 255 g 0 b 0 effect blink")))
+            if self.n_objects != n_objects_glob:
+                async def test(n_objects, rozdil):
+                    await asyncio.sleep(1)
+                    if self.n_objects == n_objects:
+                        if rozdil<0:
+                            print("redbull gambit!")
+                            sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
+                        elif rozdil>0:
+                            print("někdo přidal redbulla?")
+                            sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
+                asyncio.run(test(self.n_objects,self.n_objects-n_objects_glob))
 
-            if n_objects < n_objects_glob:
                 #validate buffer
-                buf.append(-1)
-                #sock_server.set_data("object_lost")
-            elif n_objects > n_objects_glob:
-                #validate buffer
+            #     buf.append(-1)
+            #     #sock_server.set_data("object_lost")
 
-                buf.append(1)
-            else:
-                #sock_server.set_data(str(n_objects))
-                if len(buf) >= 20:
-                    buf = []
-                buf.append(0)
+            # if 1 in buf and -1 not in buf:
+            #     print("někdo přidal redbulla?")
+            #     sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
+            #     buf.pop(buf.index(1))
+            #     #buf = []
 
-            if 1 in buf and -1 not in buf:
-                print("někdo přidal redbulla?")
-                sock_instance.emit("message", "Někdo k vaší objednávce přidal 1 redbulla zadarmo :)")
-                Setledus(ep_led,led, "G")
-                buf.pop(buf.index(1))
-                #buf = []
+            # if -1 in buf and 1 not in buf:    
+            #     print("redbull gambit!")
+            #     sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
+            #     buf.pop(buf.index(-1))
+            #     #buf = []
 
-            if -1 in buf and 1 not in buf:    
-                print("redbull gambit!")
-                sock_instance.emit("message", "Ztratil se 1 Redbull, lokace byla zaznamenána na mapě")
-                Setledus(ep_led,led, "R")
-                buf.pop(buf.index(-1))
-                #buf = []
-
-            n_objects_glob = n_objects
+            n_objects_glob = self.n_objects
             battery_status = robot.battery_level
 
             #put data into queue
-            data_comm.put_data(n_objects, start_time, start_objects_glob, battery_status)
+            data_comm.put_data(self.n_objects, start_time, start_objects_glob, battery_status)
             if self.run:
                 robot.follow_wall(-100) #wall following
                 #transform commands into map
