@@ -1,4 +1,5 @@
 from robomaster import robot, camera
+from ledik import *
 import cv2
 
 import socket
@@ -25,6 +26,7 @@ class Robot:
         self.ep_robot = ep_robot
         self.ep_chassis = self.ep_robot.chassis
         self.ep_led = self.ep_robot.led
+        Setledus(self.ep_led,led, "W")
         self.ep_camera = None
         self.battery_level = 0.0
 
@@ -120,6 +122,8 @@ class Robot:
                 self.strafe_right(4)
                 print("zajel")
                 self.ep_robot.sensor.unsub_distance()
+                coolDoneLoop(self.ep_led,led)
+                Setledus(self.ep_led,led, "W")
                 break
 
     #camera methods
@@ -145,11 +149,11 @@ if __name__ == "__main__":
     print("testing")
     robot = Robot()
     robot.camera_init()
-    asyncio.run(robot.follow_wall(800,1,100)) # Vpravo
-    # asyncio.run(robot.follow_wall(600,1,-100)) # Vlevo
-    while True:
-        img = robot.get_frame()
-        cv2.imshow("frame", img)
-        if ord("q") == cv2.waitKey(1):
-            robot.camera_stop()
-            robot.disconnect_robot()
+    #asyncio.run(robot.follow_wall(800,1,100)) # Vpravo
+    asyncio.run(robot.follow_wall(600,1,-100)) # Vlevo
+    # while True:
+    #     img = robot.get_frame()
+    #     cv2.imshow("frame", img)
+    #     if ord("q") == cv2.waitKey(1):
+    #         robot.camera_stop()
+    #         robot.disconnect_robot()
