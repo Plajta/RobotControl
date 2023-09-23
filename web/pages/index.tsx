@@ -1,14 +1,33 @@
-import { useState, useEffect } from "react";
-import { Grid, Text, Tabs, rem } from "@mantine/core";
+import { useState, useEffect, useMemo } from "react";
+import { Grid, Text, Tabs, rem, Stack, Group } from "@mantine/core";
 import { IconCamera, IconChartLine, IconWorld } from "@tabler/icons-react";
 import { socket } from "~/modules/socket";
 import { Card } from "~/components/Card";
 import { Layout } from "~/components/Layout";
 
 import classes from "~/styles/Tabs.module.css";
+import dayjs from "dayjs";
+
+interface Data {
+	start_time: number;
+	battery: number;
+	n_objects: number;
+	start_objects: number;
+}
 
 export default function Home() {
 	const [isConnected, setIsConnected] = useState(socket.connected);
+	const [date, setDate] = useState(new Date());
+	const [currentData, setCurrentData] = useState<Data | null>(
+		process.env.NODE_ENV === "development"
+			? {
+					start_time: 1695433823,
+					battery: 90,
+					n_objects: 2,
+					start_objects: 2,
+			  }
+			: null,
+	);
 
 	const iconStyle = { width: rem(12), height: rem(12) };
 
@@ -35,6 +54,7 @@ export default function Home() {
 
 		function onDataEvent(value: any) {
 			console.log(value);
+			setCurrentData(JSON.parse(value));
 		}
 
 		socket.on("connect", onConnect);
@@ -48,6 +68,14 @@ export default function Home() {
 		};
 	}, []);
 
+	useEffect(() => {
+		const timer = setInterval(() => setDate(new Date()), 1000);
+
+		return function cleanup() {
+			clearInterval(timer);
+		};
+	}, []);
+
 	return (
 		<Layout>
 			<Grid h="100%">
@@ -58,7 +86,44 @@ export default function Home() {
 						height="88vh"
 						header={<Text fw="bold">Info</Text>}
 					>
-						1
+						{currentData && (
+							<Stack gap={0} pt="xs">
+								<Group justify="space-between">
+									<Text>Stav Baterie</Text>
+									<Text>{currentData.battery} %</Text>
+								</Group>
+
+								<Group justify="space-between">
+									<Text>Doba jízdy</Text>
+
+									<Text>
+										{dayjs(
+											dayjs(date).diff(
+												dayjs(
+													currentData.start_time *
+														1000,
+												),
+											),
+										).format("mm:ss")}
+									</Text>
+								</Group>
+
+								<Group justify="space-between">
+									<Text>Počet Red Bullů</Text>
+
+									<Text>{currentData.n_objects}</Text>
+								</Group>
+
+								<Group justify="space-between">
+									<Text>Počet Ztracených Red Bullů</Text>
+
+									<Text>
+										{currentData.start_objects -
+											currentData.n_objects}
+									</Text>
+								</Group>
+							</Stack>
+						)}
 					</Card>
 				</Grid.Col>
 
