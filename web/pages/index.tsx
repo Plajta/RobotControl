@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { Grid, Text, Tabs, rem, Stack, Group } from "@mantine/core";
+import { useState, useEffect } from "react";
+import { Grid, Text, Tabs, Stack, Group, Paper, rem } from "@mantine/core";
 import { IconCamera, IconChartLine, IconWorld } from "@tabler/icons-react";
 import { socket } from "~/modules/socket";
 import { Card } from "~/components/Card";
@@ -28,6 +28,12 @@ export default function Home() {
 			  }
 			: null,
 	);
+	const [feedMessages, setFeedMessages] = useState([
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
+	]);
 
 	const iconStyle = { width: rem(12), height: rem(12) };
 
@@ -197,7 +203,20 @@ export default function Home() {
 						height={980}
 						header={<Text fw="bold">Feed</Text>}
 					>
-						3
+						<Stack mt="xs">
+							{feedMessages.map((message) => (
+								<Paper
+									p="sm"
+									radius="md"
+									style={(sx) => ({
+										background: sx.colors.blue[7],
+										color: "white",
+									})}
+								>
+									{message.content}
+								</Paper>
+							))}
+						</Stack>
 					</Card>
 				</Grid.Col>
 			</Grid>
