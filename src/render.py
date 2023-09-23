@@ -36,10 +36,12 @@ def send_data():
 @socketio.on("start")
 def start():
     run = True
+    print(run)
 
 @socketio.on("stop")
 def stop():
     run = False
+    print(run)
 
 if __name__ == "__main__":
     run = True

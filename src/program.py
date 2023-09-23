@@ -1,4 +1,4 @@
-from robot_control import Robot
+from robot_control import Robot, commands
 from robot_map import RobotMap
 from vision import aruco_init, detect
 
@@ -80,9 +80,8 @@ def main_map(run_bool):
     robotmap = RobotMap()
     while run_bool:
         robotmap.draw_interest_point(320, 320)
-
+        robotmap.upload_commands(commands)
         frame = robotmap.get_map()
-
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 

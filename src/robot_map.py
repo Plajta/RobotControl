@@ -14,3 +14,6 @@ class RobotMap:
 
     def get_map(self):
         return self.map
+
+    def upload_commands(self, commands):
+        print(commands)
