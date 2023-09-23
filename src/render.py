@@ -30,6 +30,8 @@ def send_data():
         sleep(1)
         socketio.emit("data", data)
 
+        data_comm.clear_all()
+
 #event handlers
 @socketio.on("start")
 def start():
