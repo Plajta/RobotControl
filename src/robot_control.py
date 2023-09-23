@@ -114,6 +114,7 @@ class Robot:
             # print(self.koeficient)
             if not self.lock:
                 self.ep_chassis.drive_wheels(speed,speed,speed-self.koeficient,speed-self.koeficient,0)
+                commands.append([speed,speed,speed-self.koeficient,speed-self.koeficient])
             else:
                 time.sleep(0.5)
                 robot.strafe_right(4)
