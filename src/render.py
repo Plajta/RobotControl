@@ -3,7 +3,7 @@ from flask import Flask, Response, render_template
 from flask_socketio import SocketIO
 from comm import data_comm
 
-from program import main, main_map
+from program import main, main_map, run
 from time import sleep
 
 app = Flask(__name__, static_folder="../web/webBuild/_next", template_folder="../web/webBuild")
@@ -22,10 +22,19 @@ def video_map():
     return Response(main_map(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 def send_data():
-    while True:
+    while run:
         data = data_comm.get_data()
         sleep(1)
         socketio.emit("data", data)
+
+#event handlers
+@socketio.on("start")
+def start():
+    run = True
+
+@socketio.on("stop")
+def stop():
+    run = False
 
 if __name__ == "__main__":
     socketio.start_background_task(send_data)

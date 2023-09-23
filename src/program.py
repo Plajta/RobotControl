@@ -26,7 +26,7 @@ def main():
     detector = aruco_init()
 
     #asyncio.run(sock_server.loop()) #run socket server asynfhafasly
-    while True:
+    while run:
         img = robot.get_frame()
         n_objects, ids, img_detect = detect(img, detector)
 
@@ -78,7 +78,7 @@ def main():
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 def main_map():
-    while True:
+    while run:
         robotmap = RobotMap()
         robotmap.draw_interest_point(320, 320)
 
@@ -87,6 +87,9 @@ def main_map():
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
+
+global run
+run = False
 
 if __name__ == "__main__":
     main()
