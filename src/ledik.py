@@ -1,5 +1,6 @@
 from robomaster import robot, led
 from time import sleep
+import asyncio
 def Setledus(ep_led,led, color="R",r=0,g=0,b=0):
         if color == "R":
             ep_led.set_led(comp=led.COMP_ALL, r=255, g=0, b=0, effect=led.EFFECT_ON)
@@ -22,7 +23,13 @@ def coolDoneLoop(ep_led,led):
             ep_led.set_led(comp=led.COMP_ALL, r=0, g=i, b=0, effect=led.EFFECT_ON)
             sleep(0.001)
         sleep(1)
-    
+        
+async def ShowPeriodLeds(time, firstColor="R", SecondColor="W"):
+        Setledus(ep_led,led, firstColor)
+        print("red")
+        await asyncio.sleep(time)
+        Setledus(ep_led,led, SecondColor)
+        
 if __name__ == "__main__":
     ep_robot = robot.Robot()
     ep_robot.initialize(conn_type="ap")
