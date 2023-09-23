@@ -79,6 +79,7 @@ export default function Home() {
 		}
 
 		function onDataEvent(value: any) {
+			console.log(value);
 			setCurrentData(value);
 		}
 
