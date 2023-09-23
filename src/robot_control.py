@@ -76,7 +76,7 @@ class Robot:
         self.ep_robot.battery.sub_battery_info(freq=5, callback=self.__battery_updater)
 
     def get_battery_stop(self):
-        self.ep_robot.unsub_battery_info()
+        self.ep_robot.battery.unsub_battery_info()
 
     def process_callback(self,data):
         print(data)
@@ -99,10 +99,9 @@ class Robot:
         self.koeficient = P + D
         self.last_e = e
 
-    async def follow_wall(self,distance=1000,desired_doors=1,reverse=False):
+    async def follow_wall(self,distance=1000,desired_doors=1,speed=100):
         self.distance = distance
-        self.reverse = reverse
-        self.door_for_rotate = door_for_rotate
+        self.desired_doors = desired_doors
         self.dverecounter = 0
         self.koeficient = 0
         self.last_e = 0
@@ -111,7 +110,7 @@ class Robot:
         while True:
             # print(self.koeficient)
             if not self.lock:
-                self.ep_chassis.drive_wheels(100,100,100-self.koeficient,100-self.koeficient,0)
+                self.ep_chassis.drive_wheels(speed,speed,speed-self.koeficient,speed-self.koeficient,0)
             else:
                 time.sleep(0.5)
                 robot.strafe_right(4)
@@ -142,7 +141,7 @@ if __name__ == "__main__":
     print("testing")
     robot = Robot()
     robot.camera_init()
-    asyncio.run(robot.follow_wall(800,1,True))
+    asyncio.run(robot.follow_wall(800,1,100))
     # robot.forward2()
     # robot.turn_left()
     # robot.turn_right()
