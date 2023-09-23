@@ -52,19 +52,19 @@ class Robot:
     def forward2(self):
         self.ep_chassis.drive_wheels(100,100,100,100,1)
 
-    def strafe_right(self,time=2):
-        self.ep_chassis.drive_wheels(100,100,-100,-100,time)
+    def strafe_right(self,period=2):
+        self.ep_chassis.drive_wheels(100,100,-100,-100,period)
         time.sleep(2)
-    def strafe_left(self,time=2):
-        self.ep_chassis.drive_wheels(-100,-100,100,100,time)
+    def strafe_left(self,period=2):
+        self.ep_chassis.drive_wheels(-100,-100,100,100,period)
         time.sleep(2)
 
-    def turn_right(self):
-        self.ep_chassis.drive_wheels(100,-100,-100,100,2)
-        time.sleep(2)
-    def turn_left(self):
-        self.ep_chassis.drive_wheels(-100,100,100,-100,2)
-        time.sleep(2)
+    def turn_right(self,period=2):
+        self.ep_chassis.drive_wheels(100,-100,-100,100,period)
+        time.sleep(period)
+    def turn_left(self,period=2):
+        self.ep_chassis.drive_wheels(-100,100,100,-100,period)
+        time.sleep(period)
 
     def backward():
         pass
@@ -90,7 +90,8 @@ class Robot:
         if e > 300 and self.last_e != 0 and not self.lock:
             self.dverecounter+=1
             print(self.dverecounter)
-            self.lock = True
+            if self.dverecounter >= self.desired_doors:
+                self.lock = True
         e = 0 if e > 600 else e
         P = e * 0.2
         dedt = (e-self.last_e)/0.2
@@ -98,8 +99,10 @@ class Robot:
         self.koeficient = P + D
         self.last_e = e
 
-    async def follow_wall(self,distance=1000):
+    async def follow_wall(self,distance=1000,desired_doors=1,reverse=False):
         self.distance = distance
+        self.reverse = reverse
+        self.door_for_rotate = door_for_rotate
         self.dverecounter = 0
         self.koeficient = 0
         self.last_e = 0
@@ -111,15 +114,10 @@ class Robot:
                 self.ep_chassis.drive_wheels(100,100,100-self.koeficient,100-self.koeficient,0)
             else:
                 time.sleep(0.5)
-                print("wad")
                 robot.strafe_right(4)
                 print("zajel")
-                time.sleep(12)
-                print("jede")
-                robot.strafe_left(4)
-                time.sleep(8)
-                print("vyjel")
-                self.lock = False
+                self.ep_robot.sensor.unsub_distance()
+                break
 
     #camera methods
     def camera_init(self):
@@ -144,7 +142,7 @@ if __name__ == "__main__":
     print("testing")
     robot = Robot()
     robot.camera_init()
-    asyncio.run(robot.follow_wall(800))
+    asyncio.run(robot.follow_wall(800,1,True))
     # robot.forward2()
     # robot.turn_left()
     # robot.turn_right()
