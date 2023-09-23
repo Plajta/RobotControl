@@ -12,7 +12,7 @@ import {
 	Center,
 	ScrollArea,
 } from "@mantine/core";
-import { IconCamera, IconChartLine, IconWorld } from "@tabler/icons-react";
+import { IconCamera, IconWorld } from "@tabler/icons-react";
 import { socket } from "~/modules/socket";
 import { Card } from "~/components/Card";
 import { Layout } from "~/components/Layout";
@@ -92,7 +92,6 @@ export default function Home() {
 		}
 
 		function onMessageEvent(value: string) {
-			console.log(value);
 			setFeedMessages((prev) => [...prev, value]);
 		}
 
@@ -195,18 +194,6 @@ export default function Home() {
 								>
 									Mapa
 								</Tabs.Tab>
-
-								<Tabs.Tab
-									value="charts"
-									styles={{
-										tabLabel: { fontWeight: "bold" },
-									}}
-									leftSection={
-										<IconChartLine style={iconStyle} />
-									}
-								>
-									Grafy
-								</Tabs.Tab>
 							</Tabs.List>
 
 							<Tabs.Panel value="camera">
@@ -223,10 +210,6 @@ export default function Home() {
 									alt="camera feed"
 									width="100%"
 								/>
-							</Tabs.Panel>
-
-							<Tabs.Panel value="charts">
-								Settings tab content
 							</Tabs.Panel>
 						</Tabs>
 					</Card>
