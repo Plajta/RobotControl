@@ -10,6 +10,7 @@ import {
 	rem,
 	NumberInput,
 	Center,
+	ScrollArea,
 } from "@mantine/core";
 import { IconCamera, IconChartLine, IconWorld } from "@tabler/icons-react";
 import { socket } from "~/modules/socket";
@@ -46,6 +47,15 @@ export default function Home() {
 					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
 					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
 					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
 			  ]
 			: [],
 	);
@@ -64,13 +74,8 @@ export default function Home() {
 			: "http://localhost:6969/map";
 	}
 
-	async function sendCommand(value: string) {
-		const resp = await fetch("http://localhost:6969/command", {
-			method: "POST",
-			body: JSON.stringify({ command: value, dest }),
-		});
-
-		console.log(resp.status);
+	async function sendCommand(value: "start" | "stop") {
+		socket.emit(value);
 	}
 
 	useEffect(() => {
@@ -87,6 +92,7 @@ export default function Home() {
 		}
 
 		function onMessageEvent(value: string) {
+			console.log(value);
 			setFeedMessages((prev) => [...prev, value]);
 		}
 
@@ -235,9 +241,10 @@ export default function Home() {
 					>
 						<Stack h={920} justify="space-between" mt="xs">
 							{feedMessages.length > 0 ? (
-								<Stack>
+								<ScrollArea h={900}>
 									{feedMessages.map((message) => (
 										<Paper
+											my="xs"
 											p="sm"
 											radius="md"
 											style={(sx) => ({
@@ -248,7 +255,7 @@ export default function Home() {
 											{message}
 										</Paper>
 									))}
-								</Stack>
+								</ScrollArea>
 							) : (
 								<Center>
 									<Text c="gray.8">Zatím je tu prázdno</Text>
