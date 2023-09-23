@@ -9,6 +9,7 @@ import {
 	Button,
 	rem,
 	NumberInput,
+	Center,
 } from "@mantine/core";
 import { IconCamera, IconChartLine, IconWorld } from "@tabler/icons-react";
 import { socket } from "~/modules/socket";
@@ -39,12 +40,15 @@ export default function Home() {
 			  }
 			: null,
 	);
-	const [feedMessages, setFeedMessages] = useState([
-		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
-		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
-		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
-		{ content: "Ztratil jsem Red Bull. Lokace byla označena na mapě." },
-	]);
+	const [feedMessages, setFeedMessages] = useState<string[]>(
+		process.env.NODE_ENV === "development"
+			? [
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+					"Ztratil jsem Red Bull. Lokace byla označena na mapě.",
+			  ]
+			: [],
+	);
 
 	const iconStyle = { width: rem(12), height: rem(12) };
 
@@ -82,14 +86,20 @@ export default function Home() {
 			setCurrentData(value);
 		}
 
+		function onMessageEvent(value: string) {
+			setFeedMessages((prev) => [...prev, value]);
+		}
+
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
 		socket.on("data", onDataEvent);
+		socket.on("message", onMessageEvent);
 
 		return () => {
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
 			socket.off("data", onDataEvent);
+			socket.off("message", onMessageEvent);
 		};
 	}, []);
 
@@ -224,20 +234,26 @@ export default function Home() {
 						header={<Text fw="bold">Feed</Text>}
 					>
 						<Stack h={920} justify="space-between" mt="xs">
-							<Stack>
-								{feedMessages.map((message) => (
-									<Paper
-										p="sm"
-										radius="md"
-										style={(sx) => ({
-											background: sx.colors.blue[7],
-											color: "white",
-										})}
-									>
-										{message.content}
-									</Paper>
-								))}
-							</Stack>
+							{feedMessages.length > 0 ? (
+								<Stack>
+									{feedMessages.map((message) => (
+										<Paper
+											p="sm"
+											radius="md"
+											style={(sx) => ({
+												background: sx.colors.blue[7],
+												color: "white",
+											})}
+										>
+											{message}
+										</Paper>
+									))}
+								</Stack>
+							) : (
+								<Center>
+									<Text c="gray.8">Zatím je tu prázdno</Text>
+								</Center>
+							)}
 
 							<Group grow gap={5}>
 								<Button
