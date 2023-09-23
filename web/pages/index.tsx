@@ -64,13 +64,8 @@ export default function Home() {
 			: "http://localhost:6969/map";
 	}
 
-	async function sendCommand(value: string) {
-		const resp = await fetch("http://localhost:6969/command", {
-			method: "POST",
-			body: JSON.stringify({ command: value, dest }),
-		});
-
-		console.log(resp.status);
+	async function sendCommand(value: "start" | "stop") {
+		socket.emit(value);
 	}
 
 	useEffect(() => {
