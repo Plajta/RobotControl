@@ -53,6 +53,9 @@ class Robot:
     def backward():
         pass
 
+    def get_battery(self):
+        return self.ep_robot.battery.get_battery_percentage()
+
     #camera methods
     def camera_init(self):
         self.ep_camera = self.ep_robot.camera

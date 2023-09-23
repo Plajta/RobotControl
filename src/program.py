@@ -6,13 +6,16 @@ import asyncio
 
 from comm import data_comm
 
-
 import cv2
+import time
 
 def main():
     #variables
     n_objects_glob = 0
+    start_objects_glob = 0
+    start_time = int(time.time())
     buf = []
+    i = 0
 
     print("testing")
     robot = Robot()
@@ -24,6 +27,9 @@ def main():
     while True:
         img = robot.get_frame()
         n_objects, ids, img_detect = detect(img, detector)
+
+        if i == 0: #run only once
+            start_objects_glob = n_objects
 
         # if n_objects:
         #     print("sus")
@@ -59,9 +65,10 @@ def main():
             #buf = []
 
         n_objects_glob = n_objects
+        battery_status = robot.get_battery()
 
         #put data into queue
-        data_comm.put_data(n_objects)
+        data_comm.put_data(n_objects, start_time, start_objects_glob, battery_status)
 
         ret, buffer = cv2.imencode('.jpg', img_detect)
         frame = buffer.tobytes()
